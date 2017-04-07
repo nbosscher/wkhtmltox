@@ -1,11 +1,12 @@
-package main
+package wkhtmltox
 
 import (
-	"./wkhtmltopdf"
 	"fmt"
+	"github.com/nbosscher/wkhtmltox/wkhtmltopdf"
+	"testing"
 )
 
-func main() {
+func TestBindings(t *testing.T) {
 	// global settings: http://www.cs.au.dk/~jakobt/libwkhtmltox_0.10.0_doc/pagesettings.html#pagePdfGlobal
 	gs := wkhtmltopdf.NewGlobalSettings()
 	gs.Set("outputFormat", "pdf")

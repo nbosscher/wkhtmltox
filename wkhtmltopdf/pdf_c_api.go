@@ -22,7 +22,7 @@ package wkhtmltopdf
 import "C"
 
 import (
-	"fmt"
+	"errors"
 	"unsafe"
 )
 
@@ -41,6 +41,7 @@ type Converter struct {
 	Error           func(*Converter, string)
 	Warning         func(*Converter, string)
 	Phase           func(*Converter)
+	converted       bool
 }
 
 var converter_map map[unsafe.Pointer]*Converter
@@ -122,7 +123,7 @@ func phase_changed_cb(c unsafe.Pointer) {
 	}
 }
 
-func (self *Converter) Convert() error {
+func (self *Converter) Convert() bool {
 
 	// To route callbacks right, we need to save a reference
 	// to the converter object, base on the pointer.
@@ -130,9 +131,12 @@ func (self *Converter) Convert() error {
 	status := C.wkhtmltopdf_convert(self.c)
 	delete(converter_map, unsafe.Pointer(self.c))
 	if status != C.int(1) {
-		return fmt.Errorf("Convert failed (%d)", status)
+		return false
 	}
-	return nil
+
+	self.converted = true
+
+	return true
 }
 
 func (self *Converter) Add(settings *ObjectSettings) {
@@ -147,6 +151,25 @@ func (self *Converter) AddHtml(settings *ObjectSettings, data string) {
 
 func (self *Converter) ErrorCode() int {
 	return int(C.wkhtmltopdf_http_error_code(self.c))
+}
+
+// OutputAsBuffer retrieves the converted result as a byte array.
+// If .Convert has not been called, this method will call it
+func (self *Converter) OutputAsBuffer() ([]byte, error) {
+
+	if !self.converted {
+		ok := self.Convert()
+		if !ok {
+			return nil, errors.New("wkhtmltopdf: conversion failed")
+		}
+	}
+
+	var cBuf *C.uchar
+
+	bufLen := C.int(C.wkhtmltopdf_get_output(self.c, &cBuf))
+	buf := C.GoBytes(unsafe.Pointer(cBuf), bufLen)
+
+	return buf, nil
 }
 
 func (self *Converter) Destroy() {
