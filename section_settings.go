@@ -71,6 +71,7 @@ func defaultObjectSettings() *wkhtmltopdf.ObjectSettings {
 	set := wkhtmltopdf.NewObjectSettings()
 
 	//set.Set("web.enableIntelligentShrinking", "false")
+	set.Set("viewportSize", "1280x800")
 
 	return set
 }

@@ -1,6 +1,7 @@
 package wkhtmltox
 
 import (
+	"fmt"
 	"github.com/nbosscher/wkhtmltox/wkhtmltopdf"
 	"strconv"
 )
@@ -115,11 +116,18 @@ func defaultSettings() *wkhtmltopdf.GlobalSettings {
 
 	set := wkhtmltopdf.NewGlobalSettings()
 
+	set.Set("viewportSize", "1280x800")
 	set.Set("orientation", string(Landscape))
 	set.Set("colorMode", "Color")
 	set.Set("size.paperSize", string(PageSizeA4))
 
 	return set
+}
+
+// sets the web page rendering size
+func (p *pdfConverterSettings) SetViewport(width, height uint32) {
+
+	p.settings.Set("viewportSize", fmt.Sprint(width)+"x"+fmt.Sprint(height))
 }
 
 // sets the page orientation

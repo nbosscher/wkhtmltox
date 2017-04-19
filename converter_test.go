@@ -27,6 +27,46 @@ func TestNewPdfConverter(t *testing.T) {
 	}
 }
 
+func TestPdfSettings_Orientation(t *testing.T) {
+
+	value := "Landscape"
+
+	set := defaultSettings()
+	err := set.Set("orientation", value)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	sz, err := set.Get("orientation")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if sz != value {
+		t.Fatal("expecting", value, "got", sz)
+	}
+}
+
+func TestPdfSettings_ViewPortSize(t *testing.T) {
+
+	value := "1280x800"
+
+	set := defaultSettings()
+	err := set.Set("viewportSize", value)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	sz, err := set.Get("viewportSize")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if sz != value {
+		t.Fatal("expecting", value, "got", sz)
+	}
+}
+
 func TestNewPdfConverter_SectionSettings_DisableImages(t *testing.T) {
 
 	debug.VERBOSE = true

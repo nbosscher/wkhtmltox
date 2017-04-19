@@ -55,13 +55,38 @@ func NewGlobalSettings() *GlobalSettings {
 	return &GlobalSettings{s: C.wkhtmltopdf_create_global_settings()}
 }
 
-// See https://wkhtmltopdf.org/libwkhtmltox/pagesettings.html#pagePdfGlobal for more setttings
-func (self *GlobalSettings) Set(name, value string) {
+// See https://wkhtmltopdf.org/libwkhtmltox/pagesettings.html#pagePdfGlobal for more settings
+func (self *GlobalSettings) Set(name, value string) error {
 	c_name := C.CString(name)
 	c_value := C.CString(value)
+
 	defer C.free(unsafe.Pointer(c_name))
 	defer C.free(unsafe.Pointer(c_value))
-	C.wkhtmltopdf_set_global_setting(self.s, c_name, c_value)
+
+	i := C.wkhtmltopdf_set_global_setting(self.s, c_name, c_value)
+
+	if i != C.int(1) {
+		return errors.New("wkhtml2pdf-globalsettings: set property '" + name + "' failed")
+	}
+
+	return nil
+}
+
+func (self *GlobalSettings) Get(name string) (string, error) {
+	c_name := C.CString(name)
+
+	buf := "<allocate-a-c-string-buffer----------------->"
+	c_value := C.CString(buf)
+
+	defer C.free(unsafe.Pointer(c_name))
+	defer C.free(unsafe.Pointer(c_value))
+
+	i := C.wkhtmltopdf_get_global_setting(self.s, c_name, c_value, C.int(len(buf)))
+	if i != C.int(1) {
+		return "", errors.New("wkhtml2pdf-globalsettings: null value")
+	}
+
+	return C.GoString(c_value), nil
 }
 
 func NewObjectSettings() *ObjectSettings {
