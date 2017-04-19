@@ -9,6 +9,7 @@ Most of the code in ./wkhtmltopdf was written by @jimmyw [https://github.com/jim
 ## Getting Started
 
 Depends on wkhtmltopdf library. Get it at http://wkhtmltopdf.org/downloads.html
+- Currently using a patched version to allow viewportSize parameter https://github.com/wkhtmltopdf/wkhtmltopdf/pull/3440
 
 #### Basic Case
 ```golang
