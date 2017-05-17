@@ -9,8 +9,6 @@ import (
 
 func TestNewPdfConverter(t *testing.T) {
 
-	debug.VERBOSE = true
-
 	conv := NewPdfConverter(nil)
 	conv.AddHtml("<html><body><h1>Hello world</h1></body></html>", nil)
 
@@ -69,8 +67,6 @@ func TestPdfSettings_ViewPortSize(t *testing.T) {
 
 func TestNewPdfConverter_SectionSettings_DisableImages(t *testing.T) {
 
-	debug.VERBOSE = true
-
 	conv := NewPdfConverter(nil)
 
 	sectionSettings := NewSectionSettings()
@@ -100,8 +96,6 @@ func TestNewPdfConverter_SectionSettings_DisableImages(t *testing.T) {
 
 func TestNewPdfConverter_SectionSettings_EnableImages(t *testing.T) {
 
-	debug.VERBOSE = true
-
 	conv := NewPdfConverter(nil)
 
 	sectionSettings := NewSectionSettings()
@@ -130,8 +124,6 @@ func TestNewPdfConverter_SectionSettings_EnableImages(t *testing.T) {
 }
 
 func TestNewPdfConverter_PageSettings(t *testing.T) {
-
-	debug.VERBOSE = true
 
 	settings := NewPdfConverterSettings()
 	settings.SetColorMode(ColorModeGrayScale)
