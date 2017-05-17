@@ -1,7 +1,6 @@
 package wkhtmltox
 
 import (
-	"github.com/laddersoftware/sharedgo/debug"
 	"io/ioutil"
 	"os"
 	"testing"
